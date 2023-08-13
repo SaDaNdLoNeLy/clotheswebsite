@@ -1,0 +1,131 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model User {
+  id          String    @id @default(uuid())
+  email       String    
+  password    String
+  name        String
+  role        Role      @default(USER)
+  image       String    //img URL from cloudinary 
+  orders      Order[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt  
+}
+
+model Product {
+  id          String    @id @default(uuid())
+  name        String
+  price       Decimal
+  isFeatured  Boolean   @default(false)  
+  curAmount   Decimal   @default(1)
+  for         For     
+  typeId      String    // Foreign key to type
+  type        Type      @relation(fields: [typeId], references: [id])  
+  sizeId      String    //Foreign key to size
+  size        Size      @relation(fields: [sizeId], references: [id])
+  colId       String?   //Foreign key to collect
+  collect     Collect?  @relation(fields: [colId], references: [id])
+  orderItems  OrderItem[] 
+  images      Image[]   
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([typeId])
+  @@index([sizeId])
+  @@index([colId])
+}
+
+model Type {
+  id          String    @id @default(uuid())
+  name        String    
+  products    Product[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Size {
+  id          String    @id @default(uuid())
+  name        String
+  value       String
+  products    Product[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Collect {
+  id          String    @id @default(uuid())
+  name        String    
+  image       String    //img URL from cloudinary
+  products    Product[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Order {
+  id          String    @id @default(uuid())
+  userId      String    //Foreign key to user
+  user        User      @relation(fields: [userId], references: [id])
+  orderItems  OrderItem[]
+  phone       String    @default("")
+  address     String    @default("")
+  state       State
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([userId])
+}
+
+// Intermediate for many-many Order and Product
+model OrderItem {
+  id          String    @id @default(uuid())
+  orderId     String    //Foreign key to order
+  order       Order     @relation(fields: [orderId], references: [id])    
+  productId   String    //Foreign key to product
+  product     Product   @relation(fields: [productId], references: [id])
+  amount      Decimal   
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([orderId])
+  @@index([productId])
+}
+
+model Image {
+  id          String    @id @default(uuid())
+  url         String    //URL to the image
+  productId   String    //Foreign key to product
+  product     Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([productId])
+}
+
+enum State {
+  CANCLED
+  PENDING
+  SUCCESS
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+enum For {
+  MALE
+  FEMALE
+  KID
+}
+

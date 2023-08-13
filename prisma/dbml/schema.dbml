@@ -1,0 +1,116 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table User {
+  id String [pk]
+  email String [not null]
+  password String [not null]
+  name String [not null]
+  role Role [not null, default: 'USER']
+  image String [not null]
+  orders Order [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table Product {
+  id String [pk]
+  name String [not null]
+  price Decimal [not null]
+  isFeatured Boolean [not null, default: false]
+  curAmount Decimal [not null, default: 1]
+  for For [not null]
+  typeId String [not null]
+  type Type [not null]
+  sizeId String [not null]
+  size Size [not null]
+  colId String
+  collect Collect
+  orderItems OrderItem [not null]
+  images Image [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table Type {
+  id String [pk]
+  name String [not null]
+  products Product [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table Size {
+  id String [pk]
+  name String [not null]
+  value String [not null]
+  products Product [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table Collect {
+  id String [pk]
+  name String [not null]
+  image String [not null]
+  products Product [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table Order {
+  id String [pk]
+  userId String [not null]
+  user User [not null]
+  orderItems OrderItem [not null]
+  phone String [not null, default: '']
+  address String [not null, default: '']
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table OrderItem {
+  id String [pk]
+  orderId String [not null]
+  order Order [not null]
+  productId String [not null]
+  product Product [not null]
+  amount Decimal [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table Image {
+  id String [pk]
+  url String [not null]
+  productId String [not null]
+  product Product [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Enum Role {
+  ADMIN
+  USER
+}
+
+Enum For {
+  MALE
+  FEMALE
+  KID
+}
+
+Ref: Product.typeId > Type.id
+
+Ref: Product.sizeId > Size.id
+
+Ref: Product.colId > Collect.id
+
+Ref: Order.userId > User.id
+
+Ref: OrderItem.orderId > Order.id
+
+Ref: OrderItem.productId > Product.id
+
+Ref: Image.productId > Product.id [delete: Cascade]
