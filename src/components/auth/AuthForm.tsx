@@ -1,11 +1,13 @@
 "use client";
 
+import axios from "axios";
 import { useCallback, useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import Input from "../Input";
 import Button from "../Button";
 import AuthProviderButton from "./AuthProviderButton";
-import {BsGoogle} from "react-icons/bs"
+import {BsFacebook, BsGoogle} from "react-icons/bs"
+import toast from "react-hot-toast";
 
 type Variant = "LOGIN" | "REGISTER";
 
@@ -36,7 +38,9 @@ const AuthForm = () => {
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     setIsLoading(true);
     if (variant === "REGISTER") {
-      // axios register
+      axios.post("/api/register", data)
+      .catch((response) => toast.error(response.response.data))
+      .finally(() => setIsLoading(false))
     }
 
     if (variant === "LOGIN") {
@@ -53,7 +57,7 @@ const AuthForm = () => {
       <div className="bg-white px-4 py-8 shadow sm:rounded-lg sm:px-10">
         <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
           {variant === "REGISTER" && (
-            <Input id="name" label="Name" register={register} errors={errors} />
+            <Input id="name" label="Name" register={register} errors={errors} disabled={isLoading}/>
           )}
           <Input
             id="email"
@@ -61,6 +65,7 @@ const AuthForm = () => {
             type="email"
             register={register}
             errors={errors}
+            disabled={isLoading}
           />
           <Input
             id="password"
@@ -68,6 +73,7 @@ const AuthForm = () => {
             register={register}
             type="password"
             errors={errors}
+            disabled={isLoading}
           />
           <div>
             <Button disabled={isLoading} fullWidth type="submit">
@@ -75,6 +81,7 @@ const AuthForm = () => {
             </Button>
           </div>
         </form>
+
         <div className="mt-6">
           <div className="relative">
             <div
@@ -96,6 +103,16 @@ const AuthForm = () => {
 
           <div className="mt-6 flex gap-2">
             <AuthProviderButton icon={BsGoogle} onClick={() => providerAction("google")}/>
+            <AuthProviderButton icon={BsFacebook} onClick={() => providerAction("facebook")}/>
+          </div>
+
+          <div className="flex gap-2 justify-center text-sm mt-6 px-2 text-gray-500">
+            <div>
+              {variant === "LOGIN" ? "New to our shop?" : "Already have an account?"}
+            </div>
+            <div onClick={changeVariant} className="underline cursor-pointer">
+              {variant === "LOGIN" ? "Create new account" : "Login"}
+            </div>
           </div>
         </div>
       </div>

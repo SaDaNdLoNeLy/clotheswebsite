@@ -14,9 +14,11 @@ datasource db {
 model User {
   id          String    @id @default(uuid())
   email       String?   @unique
+  verifyDate  DateTime?
+  password    String?
   name        String?   
   role        Role      @default(USER)
-  image       String    //img URL from cloudinary 
+  image       String?    //img URL from cloudinary 
   orders      Order[]
   accounts    Account[]
   sessions    Session[]
