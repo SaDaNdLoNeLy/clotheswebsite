@@ -1,19 +1,33 @@
 "use client";
 
 import axios from "axios";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
-import Input from "../Input";
-import Button from "../Button";
+import Input from "./Input";
+import Button from "./Button";
 import AuthProviderButton from "./AuthProviderButton";
-import {BsFacebook, BsGoogle} from "react-icons/bs"
+import { BsFacebook, BsGoogle } from "react-icons/bs";
 import toast from "react-hot-toast";
+import { signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 type Variant = "LOGIN" | "REGISTER";
 
 const AuthForm = () => {
+  const session = useSession();
+  const router = useRouter();
   const [variant, setVariant] = useState<Variant>("LOGIN");
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (session?.status === "authenticated") {
+      if(session?.data.user.role === "USER") {
+        router.push("/")
+      } else if (session?.data.user.role === "ADMIN") {
+        router.push("/admin")
+      }
+    }
+  }, [session?.status, router]);
 
   const changeVariant = useCallback(() => {
     if (variant === "LOGIN") {
@@ -38,18 +52,42 @@ const AuthForm = () => {
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     setIsLoading(true);
     if (variant === "REGISTER") {
-      axios.post("/api/register", data)
-      .catch((response) => toast.error(response.response.data))
-      .finally(() => setIsLoading(false))
+      axios
+        .post("/api/register", data)
+        .then(() => signIn("credentials", data))
+        .catch((response) => toast.error(response.response.data))
+        .finally(() => setIsLoading(false));
     }
 
     if (variant === "LOGIN") {
-      // nextauth signin
+      signIn("credentials", { ...data, redirect: false })
+        .then((callback) => {
+          if (callback?.error) {
+            toast.error("Invalid credentials");
+          }
+
+          if (callback?.ok && !callback?.error) {
+            toast.success("Logged in successfully");
+          }
+        })
+        .finally(() => setIsLoading(false));
     }
   };
 
   const providerAction = (action: string) => {
     setIsLoading(true);
+
+    signIn(action, { redirect: false })
+      .then((callback) => {
+        if (callback?.error) {
+          toast.error("Invalid credentials");
+        }
+
+        if (callback?.ok && !callback?.error) {
+          toast.success("Logged in");
+        }
+      })
+      .finally(() => setIsLoading(false));
   };
 
   return (
@@ -57,7 +95,13 @@ const AuthForm = () => {
       <div className="bg-white px-4 py-8 shadow sm:rounded-lg sm:px-10">
         <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
           {variant === "REGISTER" && (
-            <Input id="name" label="Name" register={register} errors={errors} disabled={isLoading}/>
+            <Input
+              id="name"
+              label="Name"
+              register={register}
+              errors={errors}
+              disabled={isLoading}
+            />
           )}
           <Input
             id="email"
@@ -102,13 +146,21 @@ const AuthForm = () => {
           </div>
 
           <div className="mt-6 flex gap-2">
-            <AuthProviderButton icon={BsGoogle} onClick={() => providerAction("google")}/>
-            <AuthProviderButton icon={BsFacebook} onClick={() => providerAction("facebook")}/>
+            <AuthProviderButton
+              icon={BsGoogle}
+              onClick={() => providerAction("google")}
+            />
+            <AuthProviderButton
+              icon={BsFacebook}
+              onClick={() => console.log("Not developed")}
+            />
           </div>
 
           <div className="flex gap-2 justify-center text-sm mt-6 px-2 text-gray-500">
             <div>
-              {variant === "LOGIN" ? "New to our shop?" : "Already have an account?"}
+              {variant === "LOGIN"
+                ? "New to our shop?"
+                : "Already have an account?"}
             </div>
             <div onClick={changeVariant} className="underline cursor-pointer">
               {variant === "LOGIN" ? "Create new account" : "Login"}

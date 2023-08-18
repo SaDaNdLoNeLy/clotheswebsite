@@ -1,11 +1,12 @@
-import AuthForm from "@/components/auth/AuthForm";
+"use client";
 
-export default function Home() {
+import { signOut } from "next-auth/react";
+
+export default function ShopPage() {
   return (
     <div className="ms-auto h-10">
-      {/* <Popup title="hello" description="hallo" isOpen={false} onClose={() => {}} /> */}
-      hello
-      <AuthForm />
+      this is main page everyone can see
+      <button onClick={() => signOut()}>Logout</button>
     </div>
   );
 }
