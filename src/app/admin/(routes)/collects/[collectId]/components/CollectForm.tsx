@@ -1,11 +1,11 @@
 "use client";
 
 import axios from "axios";
+import * as z from "zod";
 import { Heading } from "@/components/ui/heading";
 import { Collect } from "@prisma/client";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form";
-import * as z from "zod";
 import { useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import {
