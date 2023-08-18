@@ -3,7 +3,7 @@
 import axios from "axios";
 import * as z from "zod";
 import { Heading } from "@/components/ui/heading";
-import { Collect } from "@prisma/client";
+import { Size } from "@prisma/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
@@ -26,47 +26,47 @@ import { toast } from "react-hot-toast";
 
 const formSchema = z.object({
   name: z.string().min(1),
-  image: z.string().min(1),
+  value: z.string().min(1),
 });
 
-type CollectFormValues = z.infer<typeof formSchema>;
-interface CollectFormProps {
-  initialData: Collect | null;
+type SizeFormValues = z.infer<typeof formSchema>;
+interface SizeFormProps {
+  initialData: Size | null;
 }
 
-const CollectForm: React.FC<CollectFormProps> = ({ initialData }) => {
+const SizeForm: React.FC<SizeFormProps> = ({ initialData }) => {
   const params = useParams();
   const router = useRouter();
 
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const title = initialData ? "Edit collection" : "Create collection";
+  const title = initialData ? "Edit size" : "Create size";
   const description = initialData
-    ? "Edit a collection."
-    : "Add a new collection";
-  const toastMsg = initialData ? "Collection updated" : "Collection created";
+    ? "Edit a size."
+    : "Add a new size";
+  const toastMsg = initialData ? "size updated" : "size created";
   const action = initialData ? "Save changes" : "Create";
 
-  const form = useForm<CollectFormValues>({
+  const form = useForm<SizeFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: initialData || {
       name: "",
-      image: "",
+      value: "",
     },
   });
 
-  const onSubmit = async (data: CollectFormValues) => {
+  const onSubmit = async (data: SizeFormValues) => {
     console.log("hello");
     try {
       setLoading(true);
       if (initialData) {
-        await axios.patch(`/api/admin/collects/${params.collectId}`, data);
+        await axios.patch(`/api/admin/sizes/${params.sizeId}`, data);
       } else {
-        await axios.post(`/api/admin/collects`, data);
+        await axios.post(`/api/admin/sizes`, data);
       }
       router.refresh();
-      router.push(`/admin/collects`);
+      router.push(`/admin/sizes`);
       toast.success(toastMsg);
     } catch (error: any) {
       toast.error("Something went wrong.");
@@ -78,13 +78,13 @@ const CollectForm: React.FC<CollectFormProps> = ({ initialData }) => {
   const onDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/admin/collects/${params.collectId}`);
+      await axios.delete(`/api/admin/sizes/${params.sizeId}`);
       router.refresh();
-      router.push(`/admin/collects`);
-      toast.success("Collection deleted.");
+      router.push(`/admin/sizes`);
+      toast.success("Size deleted.");
     } catch (error: any) {
       toast.error(
-        "Make sure you removed all products inside this collection first."
+        "Make sure you removed all products inside this size first."
       );
     } finally {
       setLoading(false);
@@ -119,24 +119,6 @@ const CollectForm: React.FC<CollectFormProps> = ({ initialData }) => {
           onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-8 w-full"
         >
-          <FormField
-            control={form.control}
-            name="image"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Background Image</FormLabel>
-                <FormControl>
-                  <ImageUpload
-                    value={field.value ? [field.value] : []}
-                    disabled={loading}
-                    onChange={(url) => field.onChange(url)}
-                    onRemove={() => field.onChange("")}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
           <div className="grid grid-cols-3 gap-8">
             <FormField
               control={form.control}
@@ -145,7 +127,20 @@ const CollectForm: React.FC<CollectFormProps> = ({ initialData }) => {
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input disabled={loading} placeholder="Type" {...field}/>
+                    <Input disabled={loading} placeholder="Size" {...field}/>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="value"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Value</FormLabel>
+                  <FormControl>
+                    <Input disabled={loading} placeholder="Vale" {...field}/>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -161,4 +156,4 @@ const CollectForm: React.FC<CollectFormProps> = ({ initialData }) => {
   );
 };
 
-export default CollectForm;
+export default SizeForm;

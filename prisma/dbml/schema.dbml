@@ -4,14 +4,55 @@
 
 Table User {
   id String [pk]
-  email String [not null]
-  password String [not null]
-  name String [not null]
+  email String [unique]
+  emailVerified DateTime
+  password String
+  name String
   role Role [not null, default: 'USER']
-  image String [not null]
+  image String
   orders Order [not null]
+  accounts Account [not null]
+  sessions Session [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
+}
+
+Table Account {
+  id String [pk]
+  userId String [not null]
+  type String [not null]
+  provider String [not null]
+  providerAccountId String [not null]
+  refresh_token String
+  access_token String
+  expires_at Int
+  token_type String
+  scope String
+  id_token String
+  session_state String
+  user User [not null]
+
+  indexes {
+    (provider, providerAccountId) [unique]
+  }
+}
+
+Table Session {
+  id String [pk]
+  sessionToken String [unique, not null]
+  userId String [not null]
+  expires DateTime [not null]
+  user User [not null]
+}
+
+Table VerificationToken {
+  identifier String [not null]
+  token String [unique, not null]
+  expires DateTime [not null]
+
+  indexes {
+    (identifier, token) [unique]
+  }
 }
 
 Table Product {
@@ -25,6 +66,7 @@ Table Product {
   type Type [not null]
   sizeId String [not null]
   size Size [not null]
+  colors ColorItem [not null]
   colId String
   collect Collect
   orderItems OrderItem [not null]
@@ -59,6 +101,25 @@ Table Collect {
   updatedAt DateTime [not null]
 }
 
+Table Color {
+  id String [pk]
+  name String [not null]
+  value String [not null]
+  products ColorItem [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table ColorItem {
+  id String [pk]
+  colorId String [not null]
+  color Color [not null]
+  productId String [not null]
+  product Product [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
 Table Order {
   id String [pk]
   userId String [not null]
@@ -66,6 +127,7 @@ Table Order {
   orderItems OrderItem [not null]
   phone String [not null, default: '']
   address String [not null, default: '']
+  state State [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
 }
@@ -90,6 +152,12 @@ Table Image {
   updatedAt DateTime [not null]
 }
 
+Enum State {
+  CANCLED
+  PENDING
+  SUCCESS
+}
+
 Enum Role {
   ADMIN
   USER
@@ -101,11 +169,19 @@ Enum For {
   KID
 }
 
+Ref: Account.userId > User.id [delete: Cascade]
+
+Ref: Session.userId > User.id [delete: Cascade]
+
 Ref: Product.typeId > Type.id
 
 Ref: Product.sizeId > Size.id
 
 Ref: Product.colId > Collect.id
+
+Ref: ColorItem.colorId > Color.id
+
+Ref: ColorItem.productId > Product.id
 
 Ref: Order.userId > User.id
 

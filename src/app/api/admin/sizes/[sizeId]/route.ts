@@ -5,7 +5,7 @@ import prismadb from "@/lib/prisma";
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { collectId: string } }
+  { params }: { params: { sizeId: string } }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -13,7 +13,7 @@ export async function PATCH(
     const userRole = session?.user.role;
     const body = await req.json();
 
-    const { name, image } = body;
+    const { name, value } = body;
 
     if (!userId) {
       return new NextResponse("Unauthenticated", { status: 403 });
@@ -29,34 +29,34 @@ export async function PATCH(
       return new NextResponse("Name is required", { status: 400 });
     }
 
-    if (!image) {
-      return new NextResponse("Image url is required", { status: 400 });
+    if (!value) {
+      return new NextResponse("Value is required", { status: 400 });
     }
 
-    if (!params.collectId) {
-      return new NextResponse("Collection id is required", { status: 400 });
+    if (!params.sizeId) {
+      return new NextResponse("Size id is required", { status: 400 });
     }
 
-    const newCollect = await prismadb.collect.updateMany({
+    const newSize = await prismadb.size.updateMany({
       where: {
-        id: params.collectId,
+        id: params.sizeId,
       },
       data: {
         name,
-        image,
+        value,
       },
     });
 
-    return NextResponse.json(newCollect);
+    return NextResponse.json(newSize);
   } catch (error) {
-    console.log("[COLLECT_PATCH]", error);
+    console.log("[SIZE_PATCH]", error);
     return new NextResponse("Internal error", { status: 500 });
   }
 }
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { collectId: string } }
+  { params }: { params: { sizeId: string } }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -74,33 +74,33 @@ export async function DELETE(
     }
 
 
-    const collect = await prismadb.collect.deleteMany({
+    const size = await prismadb.size.deleteMany({
       where: {
-        id: params.collectId,
+        id: params.sizeId,
       },
     });
 
-    return NextResponse.json(collect);
+    return NextResponse.json(size);
   } catch (error) {
-    console.log("[COLLECT_DELETE]", error);
+    console.log("[SIZE_DELETE]", error);
     return new NextResponse("Internal error", { status: 500 });
   }
 }
 
 export async function GET(
   req: Request,
-  { params }: { params: { collectId: string } }
+  { params }: { params: { sizeId: string } }
 ) {
   try {
-    const collect = await prismadb.collect.findUnique({
+    const size = await prismadb.size.findUnique({
       where: {
-        id: params.collectId,
+        id: params.sizeId,
       },
     });
 
-    return NextResponse.json(collect);
+    return NextResponse.json(size);
   } catch (error) {
-    console.log("[COLLECT_GET]", error);
+    console.log("[SIZE_GET]", error);
     return new NextResponse("Internal error", { status: 500 });
   }
 }

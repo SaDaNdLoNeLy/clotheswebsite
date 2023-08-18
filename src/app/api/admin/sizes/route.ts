@@ -10,7 +10,7 @@ export async function POST(req: Request) {
     const userRole = session?.user.role;
     const body = await req.json();
 
-    const { name, image } = body;
+    const { name, value } = body;
 
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 403 });
@@ -25,31 +25,31 @@ export async function POST(req: Request) {
     if (!name) {
       return new NextResponse("Name is required", { status: 400 });
     }
-    if (!image) {
-      return new NextResponse("Image url is required", { status: 400 });
+    if (!value) {
+      return new NextResponse("Value is required", { status: 400 });
     }
 
-    const collect = await prismadb.collect.create({
+    const size = await prismadb.size.create({
       data: {
         name,
-        image,
+        value,
       },
     });
 
-    return NextResponse.json(collect);
+    return NextResponse.json(size);
   } catch (error) {
-    console.log("[COLLECTS_POST]", error);
+    console.log("[SIZES_POST]", error);
     return new NextResponse("Internal error", { status: 500 });
   }
 }
 
 export async function GET(req: Request) {
   try {
-    const collects = await prismadb.collect.findMany();
+    const sizes = await prismadb.size.findMany();
 
-    return NextResponse.json(collects);
+    return NextResponse.json(sizes);
   } catch (error) {
-    console.log("[COLLECTS_GET]", error);
+    console.log("[SIZES_GET]", error);
     return new NextResponse("Internal error", { status: 500 });
   }
 }
