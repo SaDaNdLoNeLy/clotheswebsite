@@ -71,16 +71,18 @@ model VerificationToken {
 
 model Product {
   id          String    @id @default(uuid())
+  prodcode    String
   name        String
   price       Decimal
   isFeatured  Boolean   @default(false)  
-  curAmount   Decimal   @default(1)
+  amount      Decimal   @default(1)
   for         For     
   typeId      String    // Foreign key to type
   type        Type      @relation(fields: [typeId], references: [id])  
   sizeId      String    //Foreign key to size
   size        Size      @relation(fields: [sizeId], references: [id])
-  colors      ColorItem[]
+  colorId     String    //Foreign key to type
+  color       Color     @relation(fields: [colorId], references: [id])
   colId       String?   //Foreign key to collect
   collect     Collect?  @relation(fields: [colId], references: [id])
   orderItems  OrderItem[] 
@@ -91,11 +93,13 @@ model Product {
   @@index([typeId])
   @@index([sizeId])
   @@index([colId])
+  @@index([colorId])
 }
 
 model Type {
   id          String    @id @default(uuid())
-  name        String    
+  name        String  
+  for         For  
   products    Product[]
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
@@ -104,6 +108,14 @@ model Type {
 model Size {
   id          String    @id @default(uuid())
   name        String
+  value       String
+  products    Product[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+model Color {
+  id          String    @id @default(uuid())
+  name        String    
   value       String
   products    Product[]
   createdAt   DateTime  @default(now())
@@ -119,28 +131,7 @@ model Collect {
   updatedAt   DateTime  @updatedAt
 }
 
-model Color {
-  id          String    @id @default(uuid())
-  name        String    
-  value       String
-  products    ColorItem[]
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-}
 
-// Intermediate for many-many Color and Product
-model ColorItem {
-  id          String    @id @default(uuid())
-  colorId     String    // Foreign key to color 
-  color       Color     @relation(fields: [colorId], references: [id])
-  productId   String    // Foreign key to product
-  product     Product   @relation(fields: [productId], references: [id])
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-
-  @@index([colorId])
-  @@index([productId])
-}
 
 model Order {
   id          String    @id @default(uuid())

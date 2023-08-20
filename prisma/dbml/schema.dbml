@@ -57,16 +57,18 @@ Table VerificationToken {
 
 Table Product {
   id String [pk]
+  prodcode String [not null]
   name String [not null]
   price Decimal [not null]
   isFeatured Boolean [not null, default: false]
-  curAmount Decimal [not null, default: 1]
+  amount Decimal [not null, default: 1]
   for For [not null]
   typeId String [not null]
   type Type [not null]
   sizeId String [not null]
   size Size [not null]
-  colors ColorItem [not null]
+  colorId String [not null]
+  color Color [not null]
   colId String
   collect Collect
   orderItems OrderItem [not null]
@@ -78,6 +80,7 @@ Table Product {
 Table Type {
   id String [pk]
   name String [not null]
+  for For [not null]
   products Product [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
@@ -92,30 +95,20 @@ Table Size {
   updatedAt DateTime [not null]
 }
 
-Table Collect {
+Table Color {
   id String [pk]
   name String [not null]
-  image String [not null]
+  value String [not null]
   products Product [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
 }
 
-Table Color {
+Table Collect {
   id String [pk]
   name String [not null]
-  value String [not null]
-  products ColorItem [not null]
-  createdAt DateTime [default: `now()`, not null]
-  updatedAt DateTime [not null]
-}
-
-Table ColorItem {
-  id String [pk]
-  colorId String [not null]
-  color Color [not null]
-  productId String [not null]
-  product Product [not null]
+  image String [not null]
+  products Product [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
 }
@@ -177,11 +170,9 @@ Ref: Product.typeId > Type.id
 
 Ref: Product.sizeId > Size.id
 
+Ref: Product.colorId > Color.id
+
 Ref: Product.colId > Collect.id
-
-Ref: ColorItem.colorId > Color.id
-
-Ref: ColorItem.productId > Product.id
 
 Ref: Order.userId > User.id
 

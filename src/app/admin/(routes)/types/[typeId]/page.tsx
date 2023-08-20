@@ -1,21 +1,21 @@
 import prismadb from "@/lib/prisma"
-import ColorForm from "./components/ColorForm"
+import TypeForm from "./components/TypeForm"
 
 const DynamicColorPage = async ({
   params
 }: {
-  params: {colorId: string}
+  params: {typeId: string}
 }) => {
-  const color = await prismadb.color.findUnique({
+  const type = await prismadb.type.findUnique({
     where: {
-      id: params.colorId
+      id: params.typeId
     }
   })
 
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-4">
-        <ColorForm initialData={color}/>
+        <TypeForm initialData={type}/>
       </div>
     </div>
   )

@@ -3,7 +3,7 @@
 import axios from "axios";
 import * as z from "zod";
 import { Heading } from "@/components/ui/heading";
-import { Collect } from "@prisma/client";
+import { Color } from "@prisma/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
@@ -26,47 +26,49 @@ import { toast } from "react-hot-toast";
 
 const formSchema = z.object({
   name: z.string().min(1),
-  image: z.string().min(1),
+  value: z.string().min(4).regex(/^#/, {
+    message: "String must be hex code"
+  }),
 });
 
-type CollectFormValues = z.infer<typeof formSchema>;
-interface CollectFormProps {
-  initialData: Collect | null;
+type ColorFormValues = z.infer<typeof formSchema>;
+interface ColorFormProps {
+  initialData: Color | null;
 }
 
-const CollectForm: React.FC<CollectFormProps> = ({ initialData }) => {
+const ColorForm: React.FC<ColorFormProps> = ({ initialData }) => {
   const params = useParams();
   const router = useRouter();
 
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const title = initialData ? "Edit collection" : "Create collection";
+  const title = initialData ? "Edit Color" : "Create color";
   const description = initialData
-    ? "Edit a collection."
-    : "Add a new collection";
-  const toastMsg = initialData ? "Collection updated" : "Collection created";
+    ? "Edit a color."
+    : "Add a new color";
+  const toastMsg = initialData ? "color updated" : "color created";
   const action = initialData ? "Save changes" : "Create";
 
-  const form = useForm<CollectFormValues>({
+  const form = useForm<ColorFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: initialData || {
       name: "",
-      image: "",
+      value: "",
     },
   });
 
-  const onSubmit = async (data: CollectFormValues) => {
+  const onSubmit = async (data: ColorFormValues) => {
     console.log("hello");
     try {
       setLoading(true);
       if (initialData) {
-        await axios.patch(`/api/admin/collects/${params.collectId}`, data);
+        await axios.patch(`/api/admin/colors/${params.colorId}`, data);
       } else {
-        await axios.post(`/api/admin/collects`, data);
+        await axios.post(`/api/admin/colors`, data);
       }
       router.refresh();
-      router.push(`/admin/collects`);
+      router.push(`/admin/colors`);
       toast.success(toastMsg);
     } catch (error: any) {
       toast.error("Something went wrong.");
@@ -78,13 +80,13 @@ const CollectForm: React.FC<CollectFormProps> = ({ initialData }) => {
   const onDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/admin/collects/${params.collectId}`);
+      await axios.delete(`/api/admin/colors/${params.colorId}`);
       router.refresh();
-      router.push(`/admin/collects`);
-      toast.success("Collection deleted.");
+      router.push(`/admin/colors`);
+      toast.success("Color deleted.");
     } catch (error: any) {
       toast.error(
-        "Make sure you removed all products inside this collection first."
+        "Make sure you removed all products inside this color first."
       );
     } finally {
       setLoading(false);
@@ -119,24 +121,6 @@ const CollectForm: React.FC<CollectFormProps> = ({ initialData }) => {
           onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-8 w-full"
         >
-          <FormField
-            control={form.control}
-            name="image"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Background Image</FormLabel>
-                <FormControl>
-                  <ImageUpload
-                    value={field.value ? [field.value] : []}
-                    disabled={loading}
-                    onChange={(url) => field.onChange(url)}
-                    onRemove={() => field.onChange("")}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
           <div className="grid grid-cols-3 gap-8">
             <FormField
               control={form.control}
@@ -145,7 +129,23 @@ const CollectForm: React.FC<CollectFormProps> = ({ initialData }) => {
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input disabled={loading} placeholder="Type" {...field}/>
+                    <Input disabled={loading} placeholder="Color" {...field}/>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="value"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Value</FormLabel>
+                  <FormControl>
+                    <div className="flex items-center gap-x-4">
+                      <Input disabled={loading} placeholder="Value" {...field}/>
+                      <div className="border p-4 rounded-full" style={{backgroundColor: field.value}}/>
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -161,4 +161,4 @@ const CollectForm: React.FC<CollectFormProps> = ({ initialData }) => {
   );
 };
 
-export default CollectForm;
+export default ColorForm;

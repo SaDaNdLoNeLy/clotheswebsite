@@ -6,7 +6,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ColorColumn } from "./columns";
+import { TypeColumn } from "./columns";
 import { Button } from "@/components/ui/button";
 import { Edit, MoreHorizontal, Trash } from "lucide-react";
 import {
@@ -20,7 +20,7 @@ import axios from "axios";
 import AlertModal from "@/components/alert-modal";
 
 interface CellActionProps {
-  data: ColorColumn;
+  data: TypeColumn;
 }
 
 const CellAction: React.FC<CellActionProps> = ({ data }) => {
@@ -31,13 +31,13 @@ const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const onDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/admin/colors/${data.id}`);
+      await axios.delete(`/api/admin/types/${data.id}`);
       router.refresh();
-      router.push("/admin/colors")
-      toast.success("Color deleted.");
+      router.push("/admin/types")
+      toast.success("Type deleted.");
     } catch (error: any) {
       toast.error(
-        "Make sure you removed all products inside this color first."
+        "Make sure you removed all products inside this type first."
       );
     } finally {
       setLoading(false);
@@ -58,7 +58,7 @@ const CellAction: React.FC<CellActionProps> = ({ data }) => {
         <DropdownMenuContent align="end">
           <DropdownMenuLabel className="pl-2">Actions</DropdownMenuLabel>
           <DropdownMenuItem
-            onClick={() => router.push(`/admin/colors/${data.id}`)}
+            onClick={() => router.push(`/admin/types/${data.id}`)}
           >
             <Edit className="mr-2 h-4 w-4" />
             Update
