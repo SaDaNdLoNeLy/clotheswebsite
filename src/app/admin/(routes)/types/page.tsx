@@ -5,7 +5,7 @@ import prismadb from "@/lib/prisma";
 import TypeClient from "./components/TypeClient";
 import {  TypeColumn } from "./components/columns";
 
-const SizePage = async () => {
+const TypePage = async () => {
   const types = await prismadb.type.findMany({
     orderBy: {
       createdAt: "desc",
@@ -28,4 +28,4 @@ const SizePage = async () => {
   );
 };
 
-export default SizePage;
+export default TypePage;

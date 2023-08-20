@@ -1,7 +1,7 @@
 import prismadb from "@/lib/prisma"
 import TypeForm from "./components/TypeForm"
 
-const DynamicColorPage = async ({
+const DynamicTypePage = async ({
   params
 }: {
   params: {typeId: string}
@@ -21,4 +21,4 @@ const DynamicColorPage = async ({
   )
 }
 
-export default DynamicColorPage
+export default DynamicTypePage
