@@ -154,6 +154,12 @@ export async function GET(
       where: {
         prodcode: params.productCode,
       },
+      include: {
+        images: true,
+        type: true,
+        size: true,
+        color: true,
+      }
     });
 
 
