@@ -4,13 +4,17 @@ import Link from "next/link";
 import { faBagShopping, faHeart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { formatter } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
-const ProductCard = (data: any) => {
+const ProductCard = (data: any, prodcode: any) => {
   console.log(data);
-  console.log(data.data.images[0].url);
 
+  const router = useRouter();
   return (
-    <div className="item-new-product m-3 max-w-xs">
+    <div
+      className="item-new-product m-3 max-w-xs"
+      onClick={() => router.push(`/product/${data.data.prodcode}`)}
+    >
       <div className="product relative max-w-[360px]">
         {/* <div className="sale-percentage absolute top-[10px] left-[10px] z-50 bg-red-600 h-11 w-11 flex justify-center items-center rounded-t-full rounded-bl-full text-base font-semibold text-white">
           30

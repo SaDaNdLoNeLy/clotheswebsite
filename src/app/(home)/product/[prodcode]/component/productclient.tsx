@@ -9,15 +9,18 @@ const ProductClient = (product: any) => {
   console.log(products);
 
   let imagesSet = products.map((item: any) => item.images);
-  console.log(imagesSet);
 
   imagesSet = flatten(imagesSet);
   const url = new Set(imagesSet.map((item: any) => item.url));
-  console.log(url);
 
   let name = new Set(products.map((item: any) => item.name));
   name = flatten([...name]);
-  console.log(name);
+
+  let price = new Set(products.map((item: any) => item.price));
+  console.log(flatten([...price]));
+
+  let colors = new Set(products.map((item: any) => item.color.value));
+  console.log(colors);
 
   return (
     <Container>
@@ -36,7 +39,9 @@ const ProductClient = (product: any) => {
                 </div>
                 <div className="product-price font-bold text-lg">
                   <span>
-                    <span className="">{formatter.format(1000000)}</span>
+                    <span className="">
+                      {formatter.format(flatten([...price])[0])}
+                    </span>
                   </span>
                 </div>
               </div>
@@ -48,11 +53,14 @@ const ProductClient = (product: any) => {
                     <span>Color: 46 Yellow</span>
                   </h6>
                   <div className="color-list flex flex-wrap justify-start">
-                    <div className="yellow h-11 w-11 bg-yellow-200 mr-3"></div>
-                    <div className="yellow h-11 w-11 bg-yellow-500 mr-3"></div>
-                    <div className="yellow h-11 w-11 bg-yellow-600 mr-3"></div>
-                    <div className="yellow h-11 w-11 bg-yellow-800 mr-3"></div>
-                    <div className="yellow h-11 w-11 bg-red-200 mr-3"></div>
+                    {[...colors].map((item: any) => (
+                      <div
+                        className={`yellow h-11 w-11 mr-3`}
+                        style={{
+                          backgroundColor: item,
+                        }}
+                      ></div>
+                    ))}
                   </div>
                 </div>
               </div>
