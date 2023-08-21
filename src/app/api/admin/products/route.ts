@@ -92,15 +92,4 @@ export async function POST(req: Request) {
   }
 }
 
-// export async function GET(req: Request) {
-//   try {
-//     const { searchParams } = new URL(req.url);
-//     const typeId = searchParams.get("type")
-//     const collects = await prismadb.collect.findMany();
 
-//     return NextResponse.json(collects);
-//   } catch (error) {
-//     console.log("[COLLECTS_GET]", error);
-//     return new NextResponse("Internal error", { status: 500 });
-//   }
-// }

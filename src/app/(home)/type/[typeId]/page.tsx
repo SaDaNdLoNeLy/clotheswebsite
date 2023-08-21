@@ -1,13 +1,20 @@
-import Container from "@/components/container"
 import HomeNav from "@/components/layout/HomeNav"
+import TypeClient from "./components/TypeClient"
+import prismadb from "@/lib/prisma"
 
 
-const TypePage = () => {
+const TypePage = async ({
+  params
+}: {params: {typeId: string}}) => {
+  const products = await prismadb.product.findMany({
+    where: {
+      typeId: params.typeId
+    }
+  })
   return (
     <>
       <HomeNav />
-      TypeClient
-      Footer
+      <TypeClient products={products}/>
     </>
   )
 }
