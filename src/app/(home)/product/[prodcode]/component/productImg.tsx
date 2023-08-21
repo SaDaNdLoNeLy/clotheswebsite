@@ -9,9 +9,8 @@ import ButtonPrev from "@/components/shopwebui/swiperbutton/buttonPrev";
 import { flatten } from "@/lib/utils";
 
 const ProductImage = (imageSet: any) => {
-  console.log(imageSet);
+
   const url = imageSet.imageSet.map((item: any) => item);
-  console.log([...url].map((item) => item));
 
   return (
     <div className="container">

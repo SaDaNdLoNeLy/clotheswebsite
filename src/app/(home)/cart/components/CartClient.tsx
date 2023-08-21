@@ -3,6 +3,7 @@
 import Container from "@/components/container"
 import useCart from "@/hooks/use-cart"
 import CartItem from "./CartItem";
+import { ProductClientType } from "../../../../../type";
 
 const CartClient = () => {
   const cart = useCart();

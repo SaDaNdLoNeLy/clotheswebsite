@@ -1,12 +1,21 @@
+"use client"
+
 import Container from "@/components/container";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ProductImage from "./productImg";
-import { flatten, formatter } from "@/lib/utils";
+import { cn, flatten, formatter } from "@/lib/utils";
+
+import { ProductClientType } from "../../../../../../type";
+import { Input } from "@/components/ui/input";
+import useCart from "@/hooks/use-cart";
 
 const ProductClient = (product: any) => {
-  console.log(product);
+  const [selectedProd, setSelectedProd] = useState<ProductClientType>()
+  const [selectedColor, setSelectedColor] = useState();
+  const [selectedSize, setSelectedSize] = useState();
   const products = [...product.product];
-  console.log(products);
+
+  const cart = useCart()
 
   let imagesSet = products.map((item: any) => item.images);
 
@@ -17,10 +26,18 @@ const ProductClient = (product: any) => {
   name = flatten([...name]);
 
   let price = new Set(products.map((item: any) => item.price));
-  console.log(flatten([...price]));
 
-  let colors = new Set(products.map((item: any) => item.color.value));
-  console.log(colors);
+  useEffect(() => {
+    products.forEach(product => {
+      if (product.size.value === selectedSize && product.color.value === selectedColor) {
+        setSelectedProd(product);
+      }
+    })
+  }, [selectedColor, selectedSize])
+
+
+  let colors = new Set(products.map((item: any) => (item.color.value)));
+  let sizes = new Set(products.map((item: any) => (item.size.value)));
 
   return (
     <Container>
@@ -43,6 +60,7 @@ const ProductClient = (product: any) => {
                       {formatter.format(flatten([...price])[0])}
                     </span>
                   </span>
+                  <div>Left in stock: {selectedProd?.amount.toString()}</div>
                 </div>
               </div>
             </div>
@@ -50,15 +68,17 @@ const ProductClient = (product: any) => {
               <div className="color-picker">
                 <div className="mb-m">
                   <h6 className="font-semibold text-xl uppercase">
-                    <span>Color: 46 Yellow</span>
+                    <span>Color: {[...colors].length}</span>
                   </h6>
                   <div className="color-list flex flex-wrap justify-start">
                     {[...colors].map((item: any) => (
                       <div
-                        className={`yellow h-11 w-11 mr-3`}
+                        key={item.id}
+                        className={cn(`yellow h-11 w-11 mr-3 cursor-pointer `, selectedColor === item ? "border-2 border-black" : "border-none")}
                         style={{
                           backgroundColor: item,
                         }}
+                        onClick={() => setSelectedColor(item)}
                       ></div>
                     ))}
                   </div>
@@ -67,24 +87,16 @@ const ProductClient = (product: any) => {
               <div className="size-picker mt-10">
                 <div className="mb-m">
                   <h6 className="font-semibold text-xl uppercase">
-                    <span>size: Men XS</span>
+                    <span>Size: {[...sizes].length}</span>
                   </h6>
                   <div className="color-list flex flex-wrap justify-start">
-                    <div className="yellow h-11 w-11 mr-3 border border-black flex justify-center items-center">
-                      XS
-                    </div>
-                    <div className="yellow h-11 w-11 mr-3 border border-black flex justify-center items-center">
-                      S
-                    </div>
-                    <div className="yellow h-11 w-11 mr-3 border border-black flex justify-center items-center">
-                      M
-                    </div>
-                    <div className="yellow h-11 w-11 mr-3 border border-black flex justify-center items-center">
-                      L
-                    </div>
-                    <div className="yellow h-11 w-11 mr-3 border border-black flex justify-center items-center">
-                      XL
-                    </div>
+                  {[...sizes].map((item: any) => (
+                      <div
+                        key={item.id}
+                        className={cn(`yellow h-11 w-11 mr-3 cursor-pointer bg-gray-500 flex justify-center items-center`, selectedSize === item ? "border-2 border-black" : "border-none")}
+                        onClick={() => setSelectedSize(item)}
+                      >{item}</div>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -97,16 +109,14 @@ const ProductClient = (product: any) => {
                 <button className="decreament h-11 w-11 border border-black">
                   -
                 </button>
-                <div className="number flex justify-center items-center border-t border-b border-black h-11 w-20">
-                  1
-                </div>
+                <Input className="mx-2" type="number" max={selectedProd?.amount.toString()}/>
                 <button className="increament h-11 w-11 border border-black">
                   +
                 </button>
               </div>
             </div>
             <div className="add-to-cart-btn w-full h-16 mt-10 text-center bg-red-600">
-              <button className="text-white font-bold text-2xl flex justify-center items-center h-full w-full">
+              <button className="text-white font-bold text-2xl flex justify-center items-center h-full w-full" onClick={() => cart.addItem(selectedProd)}>
                 Add To Cart
               </button>
             </div>

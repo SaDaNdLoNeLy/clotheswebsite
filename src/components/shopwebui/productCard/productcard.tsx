@@ -6,13 +6,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { formatter } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 
-const ProductCard = (data: any, prodcode: any) => {
+const ProductCard = (data: any) => {
   console.log(data);
 
   const router = useRouter();
   return (
     <div
-      className="item-new-product m-3 max-w-xs"
+      className="item-new-product m-3 max-w-xs cursor-pointer"
       onClick={() => router.push(`/product/${data.data.prodcode}`)}
     >
       <div className="product relative max-w-[360px]">
@@ -83,6 +83,7 @@ const ProductCard = (data: any, prodcode: any) => {
               }).format(500000)}
             </div> */}
           </div>
+          <div> <div className="sale-price">Left in stock: {data.data.amount}</div></div>
         </div>
         <div
           className="add-to-cart"
