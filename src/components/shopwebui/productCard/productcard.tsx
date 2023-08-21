@@ -32,7 +32,7 @@ const ProductCard = (data: any) => {
           </a>
         </div>
         <div className="info-prod">
-          <div className="list-color flex justify-between mb-3">
+          {/* <div className="list-color flex justify-between mb-3">
             <ul
               className="flex gap-[5px] w-full"
               onClick={(e) => e.preventDefault()}
@@ -59,7 +59,7 @@ const ProductCard = (data: any) => {
             <div className="favorite text-[#ffffff] drop-shadow-md">
               <FontAwesomeIcon icon={faHeart} className="" />
             </div>
-          </div>
+          </div> */}
           <h3 className="title-product overflow-hidden min-h-[32px] block text-[#57585a] text-sm leading-4 capitalize mb-3">
             <a
               // ref="#"

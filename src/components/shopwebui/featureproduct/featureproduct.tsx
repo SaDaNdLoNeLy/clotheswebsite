@@ -1,12 +1,13 @@
 import React from "react";
-import ProductCard from "./productCard/productcard";
+import ProductCard from "../productCard/productcard";
 import prismadb from "@/lib/prisma";
-import ButtonNext from "./swiperbutton/buttonNext";
-import ButtonPrev from "./swiperbutton/buttonPrev";
+import ButtonNext from "../swiperbutton/buttonNext";
+import ButtonPrev from "../swiperbutton/buttonPrev";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useSwiper, useSwiperSlide } from "swiper/react";
 import "swiper/css";
 import Carousel from "react-multi-carousel";
+import Sliders from "./component/sliders";
 
 const FeatureProduct = async () => {
   const product = await prismadb.product.findMany({
@@ -47,7 +48,7 @@ const FeatureProduct = async () => {
     },
   };
   return (
-    <section className="new-products px-[5%] my-10">
+    <section className="new-products my-10">
       <div className="title mt-10 text-[46px] font-bold uppercase pr-10 mobile:text-[30px]">
         <span className="">Feature Products</span>
       </div>
@@ -63,9 +64,10 @@ const FeatureProduct = async () => {
           </ul>
         </div>
         <div className="exclusive-content w-full">
-          {productFirst.map((item) => (
+          <Sliders products={productFirst} />
+          {/* {productFirst.map((item) => (
             <ProductCard data={item} />
-          ))}
+          ))} */}
         </div>
       </div>
     </section>
