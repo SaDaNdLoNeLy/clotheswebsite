@@ -24,30 +24,10 @@ export function productFirst(products: any) {
   return product1st;
 }
 
-// const products = [
-//   { productCode: 'P001', color: 'Red', size: 'S' },
-//   { productCode: 'P001', color: 'Red', size: 'M' },
-//   { productCode: 'P001', color: 'Blue', size: 'M' },
-//   // ... other product items
-// ];
-
-// const colorsSet = new Set();
-// const sizesSet = new Set();
-
-// products.forEach(product => {
-//   colorsSet.add(product.color);
-//   sizesSet.add(product.size);
-// });
-
-// const distinctColors = Array.from(colorsSet);
-// const distinctSizes = Array.from(sizesSet);
-
-// console.log('Distinct Colors:', distinctColors);
-// console.log('Distinct Sizes:', distinctSizes);
 export function getDistinctColors(products: any) {
   const colorsSet = new Set();
   products.forEach((product: any) => {
-    colorsSet.add(product.color);
+    colorsSet.add(product.color.value);
   });
   return Array.from(colorsSet);
 }
@@ -55,7 +35,13 @@ export function getDistinctColors(products: any) {
 export function getDistinctSizes(products: any) {
   const sizesSet = new Set();
   products.forEach((product: any) => {
-    sizesSet.add(product.color);
+    sizesSet.add(product.size.value);
   });
   return Array.from(sizesSet);
+}
+
+export function flatten(arr: any) {
+  return arr.reduce((pre: any, cur: any) => {
+    return pre.concat(Array.isArray(cur) ? flatten(cur) : cur);
+  }, []);
 }

@@ -8,9 +8,7 @@ interface TypeClientProps {
 const TypeClient: React.FC<TypeClientProps> = async ({ products }) => {
   const imageList = [];
   const typeName = [...new Set(products.map((item: any) => item.type.name))][0];
-  console.log(typeName);
 
-  console.log(products);
   return (
     <Container>
       <div className="px-4 sm:px-6 lg:px-8 mt-10">
