@@ -1,16 +1,19 @@
 import Container from "@/components/container";
 import prismadb from "@/lib/prisma";
-import { Product } from "@prisma/client";
+import { Color, Image, Product, Size, Type } from "@prisma/client";
+
 
 interface TypeClientProps {
-  products: Product[];
+  products: (Product & { type: Type } & { images: Image[] } & {
+    color: Color
+  } & { size: Size })[];
 }
 
 const TypeClient: React.FC<TypeClientProps> = async ({ products }) => {
-
+  const imageList = []
+  console.log(products)
   return (
     <Container>
-      {products.map((product) => (<div>{product.name}</div>))}
     </Container>
   );
 };

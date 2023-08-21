@@ -9,6 +9,12 @@ const TypePage = async ({
   const products = await prismadb.product.findMany({
     where: {
       typeId: params.typeId
+    },
+    include: {
+      images:true,
+      type: true,
+      color: true,
+      collect: true,
     }
   })
   return (
