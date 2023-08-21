@@ -2,7 +2,6 @@ import Container from "@/components/container";
 import BannerSlide from "@/components/shopwebui/bannerslide";
 import HomepageSearch from "@/components/shopwebui/HomepageSearch";
 import Collection from "@/components/shopwebui/collection";
-import FeatureProduct from "@/components/shopwebui/featureproduct";
 
 const HomeClient = () => {
   return (
@@ -11,7 +10,6 @@ const HomeClient = () => {
         <BannerSlide />
         <HomepageSearch />
         <Collection />
-        <FeatureProduct />
       </div>
     </Container>
   );
