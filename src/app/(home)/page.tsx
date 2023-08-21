@@ -1,4 +1,4 @@
-import HomeNav from "@/components/layout/HomeNav";
+import HomeNav from "@/components/nav/HomeNav";
 import { signOut } from "next-auth/react";
 import HomeClient from "./components/HomeClient";
 

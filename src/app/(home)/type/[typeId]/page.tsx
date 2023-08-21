@@ -1,30 +1,25 @@
-import HomeNav from "@/components/layout/HomeNav"
-import TypeClient from "./components/TypeClient"
-import prismadb from "@/lib/prisma"
+import HomeNav from "@/components/nav/HomeNav";
+import TypeClient from "./components/TypeClient";
+import prismadb from "@/lib/prisma";
 
-
-const TypePage = async ({
-  params
-}: {params: {typeId: string}}) => {
+const TypePage = async ({ params }: { params: { typeId: string } }) => {
   // Cần lọc array bằng function trc khi truyền vào TypeClient
   const products = await prismadb.product.findMany({
     where: {
-      typeId: params.typeId
+      typeId: params.typeId,
     },
     include: {
-      images:true,
-      type: true,
+      images: true,
       color: true,
-      collect: true,
-    }
-
-  })
+      size: true,
+    },
+  });
   return (
     <>
       <HomeNav />
-      <TypeClient products={products}/>
+      <TypeClient products={products} />
     </>
-  )
-}
+  );
+};
 
-export default TypePage
+export default TypePage;

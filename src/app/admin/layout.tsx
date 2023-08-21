@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { authOptions } from "../api/auth/[...nextauth]/route";
 
 import prismadb from "@/lib/prisma";
-import Navbar from "@/components/layout/Navbar";
+import Navbar from "@/components/nav/Navbar";
 
 export default async function AdminLayout({
   children,
@@ -12,8 +12,8 @@ export default async function AdminLayout({
 }) {
   const session = await getServerSession(authOptions);
   if (!session) {
-    console.log("hello")
-    redirect("/auth")
+    console.log("hello");
+    redirect("/auth");
   }
 
   return (
@@ -22,4 +22,4 @@ export default async function AdminLayout({
       {children}
     </>
   );
-};
+}

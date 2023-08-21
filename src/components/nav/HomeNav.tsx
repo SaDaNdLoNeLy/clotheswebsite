@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Container from "../container";
 import TypeNav from "./TypeNav";
+import CartButton from "./CartButton";
 
 const HomeNav = () => {
   return (
@@ -11,6 +12,7 @@ const HomeNav = () => {
             <p className="font-extrabold text-green-950 text-4xl">FASHION</p>
           </Link>
           <TypeNav />
+          <CartButton />
         </div>
       </Container>
     </div>
