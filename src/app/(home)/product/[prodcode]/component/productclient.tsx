@@ -15,6 +15,10 @@ const ProductClient = (product: any) => {
   const url = new Set(imagesSet.map((item: any) => item.url));
   console.log(url);
 
+  let name = new Set(products.map((item: any) => item.name));
+  name = flatten([...name]);
+  console.log(name);
+
   return (
     <Container>
       <div className="px-4 sm:px-6 lg:px-8 mt-10">
@@ -27,9 +31,7 @@ const ProductClient = (product: any) => {
               <div className="wrapper border-b border-gray-400 pb-20">
                 <div className="product-name">
                   <h1 className="heading text-5xl font-bold">
-                    <span className="uppercase">
-                      {/* {product.map((item: any) => item.name)} */}Test Name
-                    </span>
+                    <span className="uppercase">{name}</span>
                   </h1>
                 </div>
                 <div className="product-price font-bold text-lg">
