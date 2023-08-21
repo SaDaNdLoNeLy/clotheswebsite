@@ -6,6 +6,7 @@ import prismadb from "@/lib/prisma"
 const TypePage = async ({
   params
 }: {params: {typeId: string}}) => {
+  // Cần lọc array bằng function trc khi truyền vào TypeClient
   const products = await prismadb.product.findMany({
     where: {
       typeId: params.typeId
@@ -16,6 +17,7 @@ const TypePage = async ({
       color: true,
       collect: true,
     }
+
   })
   return (
     <>
