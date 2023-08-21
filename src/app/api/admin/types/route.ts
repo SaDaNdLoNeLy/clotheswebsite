@@ -45,9 +45,18 @@ export async function POST(req: Request) {
 
 export async function GET(req: Request) {
   try {
-    const sizes = await prismadb.size.findMany();
+    const { searchParams } = new URL(req.url)
+    const forWho: any = searchParams.get("for");
+    const types = await prismadb.type.findMany({
+      where: {
+        for: forWho
+      },
+      orderBy: {
+        name: "asc"
+      }
+    });
 
-    return NextResponse.json(sizes);
+    return NextResponse.json(types);
   } catch (error) {
     console.log("[SIZES_GET]", error);
     return new NextResponse("Internal error", { status: 500 });
