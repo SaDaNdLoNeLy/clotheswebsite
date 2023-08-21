@@ -16,10 +16,17 @@ const TypePage = async ({ params }: { params: { typeId: string } }) => {
       type: true,
     },
   });
+
+  const type = await prismadb.type.findFirst({
+    where: {
+      id: params.typeId
+    }
+  })
+
   return (
     <>
       <HomeNav />
-      <TypeClient products={products} />
+      <TypeClient products={products} typename={type?.name} />
       <Footer />
     </>
   );
