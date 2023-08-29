@@ -1,5 +1,6 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { ProductClientType } from "../../type";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -14,34 +15,29 @@ export const formatter = new Intl.NumberFormat("en-US", {
 //   return product.find((product) => product.prodcode === productCode);
 // });
 
-export function productFirst(products: any) {
+export function productFirst(products: ProductClientType[]) {
   const uniqueProductCodes = [
-    ...new Set(products.map((product: any) => product.prodcode)),
+    ...new Set(products.map((product) => product.prodcode)),
   ];
-  const product1st = uniqueProductCodes.map((productcode: any) => {
-    return products.find((item: any) => item.prodcode === productcode);
+  const product1st = uniqueProductCodes.map((productcode) => {
+    return products.find((item) => item.prodcode === productcode);
   });
   return product1st;
 }
 
-export function getDistinctColors(products: any) {
+export function getDistinctColors(products: ProductClientType[]) {
   const colorsSet = new Set();
-  products.forEach((product: any) => {
+  products.forEach((product) => {
     colorsSet.add(product.color.value);
   });
   return Array.from(colorsSet);
 }
 
-export function getDistinctSizes(products: any) {
+export function getDistinctSizes(products: ProductClientType[]) {
   const sizesSet = new Set();
-  products.forEach((product: any) => {
+  products.forEach((product) => {
     sizesSet.add(product.size.value);
   });
   return Array.from(sizesSet);
 }
 
-export function flatten(arr: any) {
-  return arr.reduce((pre: any, cur: any) => {
-    return pre.concat(Array.isArray(cur) ? flatten(cur) : cur);
-  }, []);
-}

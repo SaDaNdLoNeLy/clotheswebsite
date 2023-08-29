@@ -1,7 +1,6 @@
 import HomeNav from "@/components/nav/HomeNav";
 import TypeClient from "./components/TypeClient";
 import prismadb from "@/lib/prisma";
-import Footer from "@/components/shopwebui/footer";
 
 const TypePage = async ({ params }: { params: { typeId: string } }) => {
   // Cần lọc array bằng function trc khi truyền vào TypeClient
@@ -27,7 +26,6 @@ const TypePage = async ({ params }: { params: { typeId: string } }) => {
     <>
       <HomeNav />
       <TypeClient products={products} typename={type?.name} />
-      <Footer />
     </>
   );
 };
